@@ -1,8 +1,6 @@
 package main
 
-import (
-	"suite/golang/pipeline/pipeline"
-)
+import "github.com/lubingowan/pipeline/pipeline"
 
 type IpGroup struct {
 	Ip     string
@@ -70,14 +68,14 @@ var IdcGroups = []*IdcPriorityGroup{
 }
 
 func main() {
-	dispatchFlow()
+	testNormal()
 
-	normal()
+	testFlatAll()
 
-	FlatAll()
+	testCommonFlow()
 }
 
-func FlatAll() {
+func testFlatAll() {
 	s := pipeline.NewStream()
 	s.Add([][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12, 13}}).FLatAll().Print("flat all").
 		Add([][]int{{996, 997, 998}, {111}, {111}, {111}}).FLatAll().Print("flat all").Sort(func(i, j int) bool {
@@ -85,7 +83,7 @@ func FlatAll() {
 	}).Print("sorted")
 }
 
-func dispatchFlow() {
+func testCommonFlow() {
 	pipeline.NewStream(IdcGroups).Flat().Print("flat once").Map(func(i interface{}) interface{} {
 		ipGroup := [][]string{}
 		for _, idc := range i.(*IdcPriorityGroup).Idcs {
@@ -99,7 +97,7 @@ func dispatchFlow() {
 	}).Print("map once").Flat().Print("flat twice").Limit(2).Print("limited")
 }
 
-func normal() {
+func testNormal() {
 	list := [][]int{{1, 2, 3}, {4, 5, 6, 7}, {8, 9, 10}}
 	pipeline.NewStream(list).Flat().Flat().Filter(func(i interface{}) bool {
 		return i.(int)%2 == 0
