@@ -1,6 +1,8 @@
 package main
 
-import "github.com/lubingowan/pipeline/pipeline"
+import (
+	"github.com/lubingowan/pipeline"
+)
 
 type IpGroup struct {
 	Ip     string
